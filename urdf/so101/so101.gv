@@ -1,0 +1,26 @@
+digraph G {
+node [shape=box];
+"base_link" [label="base_link"];
+"shoulder_link" [label="shoulder_link"];
+"upper_arm_link" [label="upper_arm_link"];
+"lower_arm_link" [label="lower_arm_link"];
+"wrist_link" [label="wrist_link"];
+"gripper_link" [label="gripper_link"];
+"moving_jaw_so101_v1_link" [label="moving_jaw_so101_v1_link"];
+"gripper_frame_link" [label="gripper_frame_link"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_link" -> "shoulder_pan" [label="xyz: 0.0388353 -8.97657e-09 0.0624 \nrpy: 3.14159 4.18253e-17 -3.14159"]
+"shoulder_pan" -> "shoulder_link"
+"shoulder_link" -> "shoulder_lift" [label="xyz: -0.0303992 -0.0182778 -0.0542 \nrpy: 0 -1.5708 -1.5708"]
+"shoulder_lift" -> "upper_arm_link"
+"upper_arm_link" -> "elbow_flex" [label="xyz: -0.11257 -0.028 1.73763e-16 \nrpy: -3.63608e-16 8.74301e-16 1.5708"]
+"elbow_flex" -> "lower_arm_link"
+"lower_arm_link" -> "wrist_flex" [label="xyz: -0.1349 0.0052 3.62355e-17 \nrpy: 4.02456e-15 8.67362e-16 -1.5708"]
+"wrist_flex" -> "wrist_link"
+"wrist_link" -> "wrist_roll" [label="xyz: 5.55112e-17 -0.0611 0.0181 \nrpy: 1.5708 0.0486795 3.14159"]
+"wrist_roll" -> "gripper_link"
+"gripper_link" -> "gripper" [label="xyz: 0.0202 0.0188 -0.0234 \nrpy: 1.5708 -5.24284e-08 -1.41553e-15"]
+"gripper" -> "moving_jaw_so101_v1_link"
+"gripper_link" -> "gripper_frame_joint" [label="xyz: -0.0079 -0.000218121 -0.0981274 \nrpy: 3.14159 2.65359e-06 3.14159"]
+"gripper_frame_joint" -> "gripper_frame_link"
+}

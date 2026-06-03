@@ -1,0 +1,34 @@
+# ROS2 / colcon build outputs
+build/
+install/
+log/
+
+# Python cache/test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Local editor/OS files
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# Local agent/tool state
+.agents/
+.codex/
+
+# Runtime logs
+*.log
+
+# Machine-specific calibration and runtime data
+data/*.json
+
+# Keep only minimal tests in git
+test/*
+!test/test_init.py
+!test/test_servo_motion.py
