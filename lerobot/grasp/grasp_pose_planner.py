@@ -56,7 +56,7 @@ def build_grasp_plan(block_base_point, config=None):
     lift_z = grasp_z + config.lift_height_m
 
     grasp_position = np.array(
-        [block_base_point[0], block_base_point[1], grasp_z],
+        [block_base_point[0], block_base_point[1]-0.03, grasp_z-0.005],
         dtype=float,
     )
     pre_grasp_position = np.array(

@@ -4,7 +4,12 @@ from lerobot.grasp.grasp_joint_targets import HOME_JOINT_POSITIONS, READY_JOINT_
 from lerobot.grasp.grasp_pose_planner import build_grasp_plan
 from lerobot.kinematics.so101_ik import solve_position_ik
 from lerobot.kinematics.so101_model import load_so101_model
-from lerobot.so101.arm_backend import DEFAULT_ACC, DEFAULT_SPEED,CLOSED_GRIPPER_RAD
+from lerobot.so101.arm_backend import (
+    CLOSED_GRIPPER_RAD,
+    DEFAULT_ACC,
+    DEFAULT_SPEED,
+    OPEN_GRIPPER_RAD,
+)
 from lerobot.so101.joint_mapping import JOINT_NAMES
 from lerobot.vision.camera_geometry import block_location_to_base_point
 
@@ -62,7 +67,7 @@ class RedBlockGraspController:
             lift_joints = self._solve_pose(plan.lift, grasp_joints)
             place_joints = self._solve_pose(plan.place, lift_joints)
 
-            grasp_joints["gripper"] = CLOSED_GRIPPER_RAD
+            grasp_joints["gripper"] = OPEN_GRIPPER_RAD
             lift_joints["gripper"] = CLOSED_GRIPPER_RAD
             place_joints["gripper"] = CLOSED_GRIPPER_RAD
 
@@ -114,12 +119,11 @@ class RedBlockGraspController:
             self.model,
             target_position,
             initial_positions=initial_positions,
+            locked_joints={"wrist_roll": self.fixed_grasp_wrist_roll_rad},
         )
         if not result.success:
             raise RuntimeError(result.message)
-        joint_positions = dict(result.joint_positions)
-        joint_positions["wrist_roll"] = self.fixed_grasp_wrist_roll_rad
-        return joint_positions
+        return dict(result.joint_positions)
 
     def _move(self, joint_positions):
         return self.backend.move_joints(

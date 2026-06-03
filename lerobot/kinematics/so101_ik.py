@@ -26,6 +26,7 @@ def solve_position_ik(
     model,
     target_position,
     initial_positions=None,
+    locked_joints=None,
     position_tolerance=DEFAULT_POSITION_TOLERANCE,
     max_iterations=DEFAULT_MAX_ITERATIONS,
     damping=DEFAULT_DAMPING,
@@ -33,7 +34,10 @@ def solve_position_ik(
 ):
     target_position = _as_position_vector(target_position)
     joint_positions = _initial_joint_positions(model, initial_positions)
+    locked_positions = _locked_joint_positions(model, locked_joints)
+    joint_positions.update(locked_positions)
     joint_limits = model.joint_limits()
+    inactive_joints = set(locked_positions) | {"gripper"}
 
     for iteration in range(max_iterations + 1):
         current_position = _end_effector_position(model, joint_positions)
@@ -55,12 +59,13 @@ def solve_position_ik(
             model,
             joint_positions,
             current_position,
+            inactive_joints,
         )
         delta = _damped_least_squares_step(jacobian, error, damping)
         delta = _limit_step(delta, step_limit)
 
         for joint_name, joint_delta in zip(ACTIVE_JOINT_NAMES, delta):
-            if joint_name == "gripper":
+            if joint_name in inactive_joints:
                 continue
             joint_positions[joint_name] = _clamp_to_limits(
                 joint_positions[joint_name] + float(joint_delta),
@@ -98,6 +103,21 @@ def _initial_joint_positions(model, initial_positions):
     return positions
 
 
+def _locked_joint_positions(model, locked_joints):
+    if not locked_joints:
+        return {}
+
+    joint_limits = model.joint_limits()
+    positions = {}
+    for joint_name, value in locked_joints.items():
+        if joint_name not in joint_limits:
+            raise ValueError(f"unknown joint: {joint_name}")
+        positions[joint_name] = float(value)
+
+    _validate_limits(positions, joint_limits)
+    return positions
+
+
 def _validate_limits(joint_positions, joint_limits):
     for joint_name, value in joint_positions.items():
         lower, upper = joint_limits[joint_name]
@@ -115,11 +135,16 @@ def _end_effector_position(model, joint_positions):
     return end_effector_transform(model, joint_positions)[:3, 3]
 
 
-def _finite_difference_position_jacobian(model, joint_positions, current_position):
+def _finite_difference_position_jacobian(
+    model,
+    joint_positions,
+    current_position,
+    inactive_joints,
+):
     columns = []
     joint_limits = model.joint_limits()
     for joint_name in ACTIVE_JOINT_NAMES:
-        if joint_name == "gripper":
+        if joint_name in inactive_joints:
             columns.append(np.zeros(3))
             continue
 
