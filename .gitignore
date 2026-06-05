@@ -32,3 +32,6 @@ data/*.json
 test/*
 !test/test_init.py
 !test/test_servo_motion.py
+
+#用于计划的文档
+docs/*

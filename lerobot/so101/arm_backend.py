@@ -7,7 +7,7 @@ DEFAULT_SERIAL_PORT = "/dev/ttyACM0"
 DEFAULT_SPEED = 600
 DEFAULT_ACC = 20
 OPEN_GRIPPER_RAD = 1.2
-CLOSED_GRIPPER_RAD = -0.08
+CLOSED_GRIPPER_RAD = 0.001
 #安全检查抽象层，要角度先来这里检查是否越界，在调用底层
 JOINT_LIMITS = {
     calibration.joint_name: (calibration.lower_rad, calibration.upper_rad)

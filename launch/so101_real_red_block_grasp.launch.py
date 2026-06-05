@@ -131,12 +131,12 @@ def generate_launch_description():
             ),
             DeclareLaunchArgument(
                 "speed",
-                default_value="250",
+                default_value="240",
                 description="Low servo speed for real grasping.",
             ),
             DeclareLaunchArgument(
                 "acc",
-                default_value="10",
+                default_value="8",
                 description="Low servo acceleration for real grasping.",
             ),
             DeclareLaunchArgument(
