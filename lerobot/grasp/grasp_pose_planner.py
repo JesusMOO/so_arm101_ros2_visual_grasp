@@ -7,7 +7,7 @@ DEFAULT_BLOCK_HEIGHT_M = 0.01
 DEFAULT_GRASP_CLEARANCE_M = 0.0
 DEFAULT_PRE_GRASP_HEIGHT_M = 0.02
 DEFAULT_LIFT_HEIGHT_M = 0.12
-DEFAULT_PLACE_POSITION_M = np.array([0.2, -0.15, 0.08], dtype=float)
+DEFAULT_PLACE_POSITION_M = np.array([0.2, -0.055, 0.01], dtype=float)
 
 
 @dataclass(frozen=True)
